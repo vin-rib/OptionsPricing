@@ -1,10 +1,10 @@
 import numpy as np
 import datetime as dt
-from derivatives.market_environment import MarketEnvironment
-from derivatives.constant_short_rate import ConstantShortRate
-from derivatives.geometric_brownian_motion import GeometricBrownianMotion
-from derivatives.valuation_mcs_european import ValuationEuropeanMonteCarlo
-from derivatives.plot_option_stats import plot_option_stats
+from derivatives import MarketEnvironment
+from derivatives import ConstantShortRate
+from derivatives import GeometricBrownianMotion
+from derivatives import ValuationEuropeanMonteCarlo
+from derivatives import plot_option_stats
 
 me_gbm = MarketEnvironment('me_gbm', dt.datetime(2020, 1, 1))
 me_gbm.add_constant('initial_value', 36.)
