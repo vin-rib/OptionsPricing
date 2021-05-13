@@ -1,5 +1,5 @@
 # using usr/bin/python3
-from derivatives.get_year_deltas import get_year_deltas
+from derivatives_module import get_year_deltas
 import numpy as np
 
 

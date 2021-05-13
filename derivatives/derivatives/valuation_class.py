@@ -1,7 +1,6 @@
 # using usr/bin/python3
 class ValuationClass:
     """Basic class for single-factor valuation."""
-
     def __init__(self, name, underlying, mar_env, payoff_func=''):
         try:
             self.name = name

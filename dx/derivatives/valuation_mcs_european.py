@@ -1,6 +1,6 @@
 import numpy as np
 
-from derivatives.valuation_class import ValuationClass
+from derivatives import ValuationClass
 
 
 class ValuationEuropeanMonteCarlo(ValuationClass):

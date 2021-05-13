@@ -1,7 +1,7 @@
 # using usr/bin/python3
 import numpy as np
-from derivatives.sn_random_numbers import sn_random_numbers
-from derivatives.simulation_class import SimulationClass
+from derivatives import sn_random_numbers
+from derivatives import SimulationClass
 
 
 class GeometricBrownianMotion(SimulationClass):
