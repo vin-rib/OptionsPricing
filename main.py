@@ -11,7 +11,7 @@ me_gbm.add_constant('initial_value', 36.)
 me_gbm.add_constant('volatility', 0.2)
 me_gbm.add_constant('final_date', dt.datetime(2020, 12, 31))
 me_gbm.add_constant('currency', 'EUR')
-me_gbm.add_constant('frequency', 'B')
+me_gbm.add_constant('frequency', 'M')
 me_gbm.add_constant('paths', 1000)
 
 csr = ConstantShortRate('csr', 0.06)
@@ -20,15 +20,16 @@ gbm = GeometricBrownianMotion('gbm', me_gbm)
 
 me_call = MarketEnvironment('me_call', me_gbm.pricing_date)
 me_call.add_constant('strike', 20.)
-me_call.add_constant('maturity', dt.datetime(2021, 12, 25))
+me_call.add_constant('maturity', dt.datetime(2021, 12, 31))
 me_call.add_constant('currency', 'EUR')
 
-payoff_func = "np.max(maturity_value - strike, 80)"
+
+payoff_func = "np.maximum(maturity_value - strike, 0)"
 eur_call = ValuationEuropeanMonteCarlo('eur_call', underlying=gbm,
-                                       mar_env=me_call, payoff_func=payoff_func)
-eur_call.present_value()
-# eur_call.delta()
-# eur_call.vega()
+                                       mar_env=me_call, payoff_func=payoff_func, option_type='Binary')
+print(eur_call.present_value())
+print(eur_call.delta())
+print(eur_call.vega())
 
 s_list = np.arange(34., 46.1, 2.)
 p_list = []

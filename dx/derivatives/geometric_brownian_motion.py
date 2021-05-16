@@ -2,6 +2,7 @@
 import numpy as np
 from derivatives import sn_random_numbers
 from derivatives import SimulationClass
+import matplotlib.pyplot as plt
 
 
 class GeometricBrownianMotion(SimulationClass):
@@ -48,4 +49,21 @@ class GeometricBrownianMotion(SimulationClass):
             # generate simulated values for the respective date
         self.instrument_values = paths
 
+    def plot(self, path_model):
+        plt.figure(figsize=(10, 6))
+        model1 = plt.plot(self.time_grid, path_model[0][:, :30], label='Low Volatility', color='r',
+                          linestyle='--', linewidth=1)
+        model2 = plt.plot(self.time_grid, path_model[1][:, :30], label='High Volatility', color='b',
+                          linestyle='--', linewidth=1)
+
+        # # Create a legend for the first line.
+        legends = plt.legend(handles=[model1[0], model2[0]], loc='upper right')
+
+        # # Add the legend manually to the current Axes.
+        plt.gca().add_artist(legends)
+
+        # # Create another legend for the second line.
+        plt.grid(b=True, which='both', color='#999999', linestyle='-', alpha=0.9)
+
+        plt.show()
 

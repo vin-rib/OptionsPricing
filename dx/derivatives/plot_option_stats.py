@@ -20,5 +20,5 @@ def plot_option_stats(s_list, p_list, d_list, v_list):
     plt.plot(s_list, v_list, 'yo', label='Vega')
     plt.plot(s_list, v_list, 'b')
     plt.xlabel('initial value of underlying')
-    plt.grid(True);
+    plt.grid(True)
     plt.legend(loc=0)

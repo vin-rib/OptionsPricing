@@ -1,7 +1,8 @@
 # using usr/bin/python3
 class ValuationClass:
     """Basic class for single-factor valuation."""
-    def __init__(self, name, underlying, mar_env, payoff_func=''):
+    def __init__(self, name, underlying, mar_env, payoff_func='', option_type='European'):
+        self.option_type = option_type
         try:
             self.name = name
             self.pricing_date = mar_env.pricing_date
