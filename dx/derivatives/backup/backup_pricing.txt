@@ -1,0 +1,101 @@
+class Pricing():
+    def __init__(S0, K, T, r, mu, sigma, option_type, t=0, *args):
+        self.S0 = S0
+        self.T = T
+        self.K = K
+        self.t = t
+        self.r = r
+        self.sigma = sigma
+        self.opt = option_type
+
+    def update(self, initial_time, stock_price):
+        if initial_time is not None:
+            self.t = initial_time
+        if stock_price is not None:
+            self.S0 = stock_price
+
+    def __getitem__(self, key):
+        if key == 1 or key == 'r':
+            return self.__r
+        if key == 2 or key == 'vol':
+            return self.__sigma
+        if key == 3 or key == 'T':
+            return self.__T
+        return None
+
+    def __setitem__(self, key, value):
+        if key == 1 or key == 'r':
+            try:
+                self.__r = value
+            except TypeError:
+                print('Erro de troca')
+            self.__r = value
+        if key == 2 or key == 'vol':
+            try:
+                self.__sigma = value
+            except TypeError:
+                print('Erro de troca')
+        if key == 3 or key == 'T':
+            try:
+                self.__T = value
+            except TypeError:
+                print('Erro de troca')
+
+    def GBM_path(self, npts=100, seed=2, plot=False):
+        np.random.seed(seed)
+        n = npts
+        ts, dt = np.linspace(0, self.T, n, retstep=True)
+        S = np.zeros(n)
+        S[0] = self.S0
+        Wi = np.random.normal(0, np.sqrt(dt), n)
+        W = np.cumsum(Wi)
+        for i in range(1, n):
+            S[i] = self.S0 * np.exp((r - 0.5 * self.sigma * self.sigma) * ts[i - 1] + self.sigma * W[i])
+        if plot == True:
+            plt.plot(ts, W)
+            plt.show()
+        return S, ts
+
+    def paths(self, npts=100, npaths=10):
+        k = np.random(npaths)
+        path = np.empty((npaths, npts))
+        ts = np.linspace(0, self.T, npts)
+        for i in range(npaths):
+            path[i], __ = self.GBM_path(npts, seed=k[i])
+        return path, ts
+
+    def opt_sim(self, opt='eurocall', npts=100, npaths=10):
+        stocks, ts = self.paths(npts, npaths)
+        payoffs = np.empty((npaths, 1))
+
+        for i in range(npaths):
+
+            # European
+            if opt == 'eurocall':
+                payoffs[i] = np.max(0, stocks[i][-1] - self.K)
+            if opt == 'europut':
+                payoffs[i] = np.max(0, -stocks[i][-1] + self.K)
+            # Binary
+            if opt == 'binarycall':
+                if stocks[i][-1] > self.K:
+                    payoffs[i] = 1
+                else:
+                    payoffs[i] = 0
+            if opt == 'binaryput':
+                if stocks[i][-1] < self.K:
+                    payoffs[i] = 1
+                else:
+                    payoffs[i] = 0
+            # Asian
+            if opt == 'asiancall':
+                S[i] = np.mean(stocks[i])
+                payoffs[i] = np.max(0, S[i] - self.K)
+            if opt == 'asianput':
+                S[i] = np.mean(stocks[i])
+                payoffs[i] = np.max(0, -S[i] + self.K)
+            # Custom
+            if args:
+                payoffs[i] = eval()
+
+        mc_average = np.sum(payoffs, axis=0) / self.npaths
+        return np.exp(-self.r * self.T) * mc_average
