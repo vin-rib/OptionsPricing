@@ -15,7 +15,7 @@ class ValuationEuropeanMonteCarlo(ValuationClass):
     """ Class to value European options with arbitrary payoff
     by single-factor Monte Carlo simulation ( Just only for PUT and CALLS )."""
 
-    def generate_payoff(self, fixed_seed=False):
+    def generate_payoff(self, barrier=None, fixed_seed=False):
         strike = self.strike
         option_type = self.option_type
         time_index = None
@@ -46,8 +46,30 @@ class ValuationEuropeanMonteCarlo(ValuationClass):
                 return payoff
             except Exception as error:
                 print(f"Maturity date not in time grid of underlying. {error}")
-        else:
-            return None
+        elif option_type == 'KnockoutBarrier':
+            try:
+                flags = np.empty(np.shape(paths)[1])
+                for i in range(np.shape(paths)[1]):
+                    if np.amax(paths[:, i]) > barrier:
+                        flags[i] = 0
+                    else:
+                        flags[i] = 1
+                payoff = (eval(self.payoff_func) @ flags) / np.shape(paths)[0]
+                return payoff
+            except Exception as error:
+                print(f"Maturity date not in time grid of underlying. {error}")
+        elif option_type == 'KnockinBarrier':
+            try:
+                flags = np.empty(np.shape(paths)[1])
+                for i in range(np.shape(paths)[1]):
+                    if np.amax(paths[:, i]) > barrier:
+                        flags[i] = 1
+                    else:
+                        flags[i] = 0
+                payoff = (eval(self.payoff_func) @ flags) / np.shape(paths)[0]
+                return payoff
+            except Exception as error:
+                print(f"Maturity date not in time grid of underlying. {error}")
 
     def present_value(self, accuracy=6, fixed_seed=False, full=False):
         cash_flow = self.generate_payoff(fixed_seed=fixed_seed)

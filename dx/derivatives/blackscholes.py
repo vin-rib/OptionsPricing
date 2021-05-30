@@ -1,5 +1,5 @@
 import numpy as np
-import scipy
+import scipy.stats
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -149,22 +149,10 @@ class BlackScholes:
                 ds = round(stocks[i] - stocks[i - 1], 4)
                 cash[i] += ds * path[i]
                 ds_list.append(ds)
-                if ds > 0:
-                    print("actual delta:{}".format(deltas[i]),
-                          "Buy {} shares at {}".format(ds, path[i]))
-                if ds < 0:
-                    print("actual delta:{}".format(deltas[i]),
-                          "Sell {} shares at {}".format(ds, path[i]))
             elif i == 0:
                 ds = round(stocks[i], 4)
                 cash[i] += ds * path[i]
                 ds_list.append(ds)
-                if ds > 0:
-                    print("actual delta:{}".format(deltas[i]),
-                          "Buy {} shares at {}".format(ds, path[i]))
-                if ds < 0:
-                    print("actual delta:{}".format(deltas[i]),
-                          "Sell {} shares at {}".format(ds, path[i]))
             self.update(initial_time=ts[i], stock_price=path[i])
 
         data = {"delta": deltas,
@@ -176,20 +164,9 @@ class BlackScholes:
         results = np.array(ds_list) @ path
         return results, df
 
-        # todo check this code
-        # if (stocks[-1]<n_options) and (path[-1]>=self.strike):
-        #  results = cash[-1] + (n_options - stocks[-1])*(self.strike - path[-1])
-        # if (stocks[-1]>=n_options) and (path[-1]>=self.strike):
-        #  results = cash[-1] + (stocks[-1]-n_options)*path[-1]
-        # if path[-1]<self.strike:
-        #  results = cash[-1] + stocks[-1]*path[-1]
-        # else:
-        # results = cash[-1]
-        # return ts,stocks,cash,results
-
     def stop_loss(self, pct=0, number_steps=100, seed=2, plot=False, *args):
         """
-        estratégia de comprar quando passar do strike e vender quando estiver abaixo
+        Estratégia de comprar quando passar do strike e vender quando estiver abaixo
         :param pct:
         :param number_steps:
         :param seed:
@@ -229,7 +206,6 @@ class BlackScholes:
             results = cash[-1] - self.strike
         if path[-1] < self.strike:  # se o preço estiver abaixo do strike a opção não será executada
             results = cash[-1]
-            # todo MAIS UM IF
         buy_list = np.array(buy_list)
         sell_list = np.array(sell_list)
         if plot:
