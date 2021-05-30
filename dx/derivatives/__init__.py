@@ -15,3 +15,4 @@ from .valuation_mcs_european import ValuationEuropeanMonteCarlo
 
 # #  pricing methods
 from .pricing import Pricing
+from .blackscholes import BlackScholes
