@@ -12,3 +12,6 @@ from .geometric_brownian_motion import GeometricBrownianMotion
 # # valuation
 from .valuation_class import ValuationClass
 from .valuation_mcs_european import ValuationEuropeanMonteCarlo
+
+# #  pricing methods
+from .pricing import Pricing
