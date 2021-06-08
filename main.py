@@ -26,8 +26,8 @@ me_call.add_constant('currency', 'EUR')
 
 payoff_func = "np.maximum(maturity_value - strike, 0)"
 eur_call = ValuationEuropeanMonteCarlo('eur_call', underlying=gbm,
-                                       mar_env=me_call, payoff_func=payoff_func, option_type='Binary')
-print(eur_call.present_value())
+                                       mar_env=me_call, payoff_func=payoff_func, option_type='KnockinBarrier')
+print(eur_call.present_value(barrier=10))
 print(eur_call.delta())
 print(eur_call.vega())
 

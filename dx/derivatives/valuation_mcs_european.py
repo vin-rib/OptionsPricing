@@ -71,8 +71,8 @@ class ValuationEuropeanMonteCarlo(ValuationClass):
             except Exception as error:
                 print(f"Maturity date not in time grid of underlying. {error}")
 
-    def present_value(self, accuracy=6, fixed_seed=False, full=False):
-        cash_flow = self.generate_payoff(fixed_seed=fixed_seed)
+    def present_value(self, accuracy=6, fixed_seed=False, full=False, barrier=None):
+        cash_flow = self.generate_payoff(fixed_seed=fixed_seed, barrier=barrier)
         discount_factor = self.discount_curve.get_discount_factors(
             (self.pricing_date, self.maturity))[0, 1]
         result = discount_factor * np.sum(cash_flow) / len(cash_flow)
